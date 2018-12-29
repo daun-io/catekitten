@@ -72,7 +72,7 @@ class YoonKimCNN(SequenceEncoderBase):
 
 
 class TextLab(SequenceEncoderBase):
-    def __init__(self, filter_sizes=[3, 4, 5], dropout_rate=0.5, **conv_kwargs):
+    def __init__(self, num_filters=128, filter_sizes=[3, 4, 5], dropout_rate=0.5, **conv_kwargs):
         """Modified version of Yoon Kim's shallow cnn model: https://arxiv.org/pdf/1408.5882.pdf
         Args:
             num_filters: The number of filters to use per `filter_size`. (Default value = 64)
@@ -82,6 +82,7 @@ class TextLab(SequenceEncoderBase):
         super(TextLab, self).__init__(dropout_rate)
         self.filter_sizes = filter_sizes
         self.conv_kwargs = conv_kwargs
+        self.num_filters = num_filters
 
     def conv_block(self, x, num_filters, num_kernels=2):
         bypass = x
@@ -100,14 +101,14 @@ class TextLab(SequenceEncoderBase):
 
         with tf.variable_scope("encoder"):
             for filter_size in self.filter_sizes:
-                x_i = layers.Conv1D(128, filter_size, use_bias=False, **self.conv_kwargs)(x)
+                x_i = layers.Conv1D(self.num_filters, filter_size, use_bias=False, **self.conv_kwargs)(x)
                 x_i = layers.BatchNormalization()(x_i)
                 x_i = layers.GlobalMaxPooling1D()(x_i)
                 pooled_tensors.append(x_i)
             x = pooled_tensors[0] if len(self.filter_sizes) == 1 else layers.concatenate(pooled_tensors, axis=-1)
         
         with tf.variable_scope("decoder"):
-            x = self.conv_block(x, 128)
+            x = self.conv_block(x, self.num_filters)
             
         return x
 
