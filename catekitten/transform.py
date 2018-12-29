@@ -4,62 +4,12 @@ import re
 import numpy as np
 import pandas as pd
 
-from eunjeon import Mecab as Okt  # Uses mecab for better performance
+from eunjeon import Mecab # Uses mecab for better performance
 from sklearn.base import BaseEstimator, TransformerMixin
 
 __all__ = ['ColumnSelector', 'ColumnMerger', 'WordUnifier',
            'RegExReplacer', 'DuplicateRemover', 'StopWordRemover',
            'WordLower', 'MorphTokenizer', 'NounTokenizer', 'PosTokenizer']
-
-"""
-## Transform 코드 구성
-
-### 자연어 처리 부분 Transform
-    - string을 받아 string을 내뱉는 것을 원칙으로 한다. ( 순서에 무관할 수 있도록 )
-    - 멱등성을 가져야 한다. (동일 input, 동일 output)
-    - input type에 따라 output datatype이 정해지는 구조로 한다.
-      np.ndarray -> np.ndarray
-      pd.Series -> pd.Series
-      pd.Dataframe -> pd.Dataframe
-
-
-    1. DataFrame Preprocessing
-        DataExtractor에서 어떤 컬럼에 전처리를 진행할지 결정하는 부분
-
-    2. Basic Preprocssing
-        기본적인 문장에 대한 전처리 코드가 들어가는 부분
-
-    3. Tokenizer
-        형태소 분석 부분. tokenizer 엔진으로서는 konlpy에서의 Okt(이전 Twitter)을 적용한다.
-        reference : https://konlpy-ko.readthedocs.io/ko/v0.4.3/api/konlpy.tag/
-
-    ----------------------------
-    아래 Vectorizer는 아직 어떤 식으로 구현하는 것이 좋을지 고민이 되고 있습니다.
-    여기에 대해서 같이 토의해보아요
-    ----------------------------
-    4. Vectorizer
-        word를 벡터화시키는 부분
-
-        참고 자료들
-        1) BOW(Bag of Words) 방법론
-        reference : https://datascienceschool.net/view-notebook/3e7aadbf88ed4f0d87a76f9ddc925d69/
-
-        2) 임베딩 방법론
-        reference : https://ratsgo.github.io/from%20frequency%20to%20semantics/2017/03/11/embedding/
-
-
-### Category 라벨링 부분 Transform
-    우리는 기본적으로 분류모델. 예측 목표가 되는 라벨 정보가 있고, 카카오에서는
-    labeling이 핵심이 된다.
-
-    5.  OneHotEncoder
-        - CategoryOneHotEncoder
-            카테고리 라벨 정보를 one-hot을 encoding함
-
-        - CategoryMergeEncoder
-            카테고리 라벨 정보를 합쳐서 encoding함
-
-"""
 
 
 ############################
@@ -349,7 +299,7 @@ class WordLower(BaseEstimator, TransformerMixin):
 ############################
 class MorphTokenizer(BaseEstimator, TransformerMixin):
     def __init__(self):
-        self._okt = Okt()
+        self._mecab = Mecab()
 
     def fit(self, X, y=None):
         return self
@@ -369,12 +319,12 @@ class MorphTokenizer(BaseEstimator, TransformerMixin):
             raise TypeError("적절하지 못한 DataType이 들어왔습니다.")
 
     def _transform(self, phrase):
-        return " ".join(self._okt.morphs(phrase))
+        return " ".join(self._mecab.morphs(phrase))
 
 
 class NounTokenizer(BaseEstimator, TransformerMixin):
     def __init__(self):
-        self._okt = Okt()
+        self._mecab = Mecab()
 
     def fit(self, X, y=None):
         return self
@@ -394,7 +344,7 @@ class NounTokenizer(BaseEstimator, TransformerMixin):
             raise TypeError("적절하지 못한 DataType이 들어왔습니다.")
 
     def _transform(self, phrase):
-        return " ".join(self._okt.nouns(phrase))
+        return " ".join(self._mecab.nouns(phrase))
 
 
 class PosTokenizer(BaseEstimator, TransformerMixin):
@@ -403,7 +353,7 @@ class PosTokenizer(BaseEstimator, TransformerMixin):
         self._norm = norm
         self._stem = stem
         self._excludes = excludes
-        self._okt = Okt()
+        self._mecab = Mecab()
 
     def fit(self, X, y=None):
         return self
@@ -423,7 +373,7 @@ class PosTokenizer(BaseEstimator, TransformerMixin):
             raise TypeError("적절하지 못한 DataType이 들어왔습니다.")
 
     def _transform(self, phrase):
-        pos_list = self._okt.pos(phrase)
+        pos_list = self._mecab.pos(phrase)
         pos_drop = list(filter(
             lambda pos: pos[1] not in self._excludes, pos_list))
 
@@ -431,23 +381,3 @@ class PosTokenizer(BaseEstimator, TransformerMixin):
             return ""
         else:
             return " ".join(list(zip(*pos_drop))[0])
-
-############################
-# 4. Vectorizer
-# TODO : vectorizer은 설계부터 고민해보고 있습니다.
-# 고민포인트
-# -----------------
-# 오히려 임베딩 방법론은 적용하기는 간단해 보입니다.
-# BOW 방법론을 어떤식으로 적용할지 고민이 되고 있습니다.
-############################
-
-
-############################
-# 5. Category Transform
-# TODO : 어떤 식으로 짤지에 대해 고민해보고 있습니다.
-# 고민포인트
-# ----------------
-# 카카오 데이터셋에 종속적으로 one-hot encoding을 짤지,
-# General한 형태로 one-hot encoding을 짤지가 고민이 되고 있습니다.
-############################
-

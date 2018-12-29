@@ -13,7 +13,7 @@ WEIGHT_S = 1.3
 WEIGHT_D = 1.4
 
 
-def arena_accuracy_score(
+def arena_score(
     b_pred=None, b_gt=None, m_pred=None, m_gt=None,
     s_pred=None, s_gt=None, d_pred=None, d_gt=None, weighted=True):
 
@@ -36,6 +36,19 @@ def arena_accuracy_score(
             scores.append(score)
     
     return np.array(scores) / n_classes
+
+
+def arena_accuracy_score(y_true, y_pred, category='b'):
+    """Evaluation method for Kakao Arena"""
+    score = accuracy_score(y_true[y_true != 0], y_pred[y_true != 0])
+    if category == 'm':
+        score *= WEIGHT_M
+    if category == 's':
+        score *= WEIGHT_S
+    if category == 'd':
+        score *= WEIGHT_D
+
+    return score
 
 
 def evaluate(predict_path, data_path, div, y_vocab_path):

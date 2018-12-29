@@ -1,25 +1,35 @@
-# Shopping categories
+# Catekitten
 
-## Data
+Catekitten은 Kakao-arena(1. 쇼핑몰 카테고리 분류) 참가에 사용된 모든 코드와 아이디어를 공개하는 저장소입니다.
 
-hdf5로 chunk 데이터 입력.  
-y = ['bcateid', 'mcateid', 'scateid', 'dcateid']  
-x = ['brand', 'img_feat', 'maker',  'model', 'pid', 'price', 'product',  'updttm']  
+## 모델 재구현
+```
+# 저장소 clone
+git clone https://github.com/nyanye/catekitten.git
+cd catekitten
 
-### Feature
+# HDF preprocessing
+python -m catekitten.data merge "./data/raw/" "./data/prep/textonly.h5" 
 
-Text feature: 브랜드명, 제조사, 정제된 상품명, 상품 ID, 상품명, 상품 정보
-Linear scale: 업데이트 시간, 가격
-Image feature: 이미지 피쳐(2048)
-
-### Label
-
-대분류, 중분류, 소분류, 세분류
-
-## Preprocessing
-
-업데이트 시간 = unix timestamp로 치환, linear scale feature로 사용
+# Train
+python -m catekitten.train
+```
 
 ## Evaluation
 
 ((대분류 정확도) * 1.0 + (중분류 정확도) * 1.2 + (소분류 정확도) * 1.3 + (세분류 정확도) * 1.4) / 4
+
+## Copyright
+
+아래 모듈은 [Kakao-Valhala 저장소](https://github.com/Demiguises/Kakao-Valhalla)의 코드를 차용/변경하였습니다.
+
+```
+catekitten.data  
+catekitten.transform  
+```
+
+### License
+
+Apache License 2.0
+
+Copyright 2018-2019 (c) nyanye
