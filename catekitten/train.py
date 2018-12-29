@@ -135,7 +135,7 @@ class TextFeatureClassifier(object):
 
     def describe_labels(self):
         for letter in ['b','m','s','d']:
-            print("number of %scateid classes:", 
+            print("number of %scateid classes:" % letter, 
                 len(self.category_labels['%scateid' % letter]))
     
     def describe_features(self):
@@ -151,7 +151,7 @@ class TextFeatureClassifier(object):
                 print("tokenizing %s of %s phase" % (column, phase))
                 self.text_feature_maps[phase][column].map(lowercase)
                 self.text_feature_maps[phase][column] = morpheme_tokenizer.fit_transform(
-                    self.text_feature_maps[column])
+                    self.text_feature_maps[phase][column])
 
     def convert_feature_to_sequences(self, tokenizer_pickle="models/tokenizer.pkl"):
         if os.path.exists(tokenizer_pickle):
