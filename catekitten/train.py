@@ -153,25 +153,33 @@ class TextFeatureClassifier(object):
                 self.text_feature_maps[phase][column] = morpheme_tokenizer.fit_transform(
                     self.text_feature_maps[phase][column])
 
-    def convert_feature_to_sequences(self, tokenizer_pickle="models/tokenizer.pkl"):
-        if os.path.exists(tokenizer_pickle):
-            print("loading pre-generated tokenizer")
-            with open(tokenizer_pickle, 'rb') as handle:
-                tokenizer = pickle.load(handle)
-        else:
-            tokenizer = Tokenizer(num_words=param.vocab_size)
-            tokenizer.fit_on_texts(pd.concat(
-                [self.text_feature_maps['train'],
-                self.text_feature_maps['dev'],
-                self.text_feature_maps['test']]))
+    def convert_feature_to_sequences(self, tokenizer_pickle="models/%s_tokenizer.pkl"):
+        tokenizer = {
+            'product': None,
+            'model': None,
+            'brand': None,
+            'maker': None,
+        }
 
-            # saving tokenizer
-            with open(tokenizer_pickle, 'wb') as handle:
-                pickle.dump(tokenizer, handle, protocol=pickle.HIGHEST_PROTOCOL)
+        for category in self.categories:
+            if os.path.exists(tokenizer_pickle % category):
+                print("loading pre-generated tokenizer")
+                with open(tokenizer_pickle, 'rb') as handle:
+                    tokenizer[category] = pickle.load(handle)
+            else:
+                tokenizer[category] = Tokenizer(num_words=param.vocab_size)
+                tokenizer[category].fit_on_texts(pd.concat(
+                    [self.text_feature_maps['train'][category],
+                    self.text_feature_maps['dev'][category],
+                    self.text_feature_maps['test'][category]]))
+
+                # saving tokenizer
+                with open(tokenizer_pickle % category, 'wb') as handle:
+                    pickle.dump(tokenizer[category], handle, protocol=pickle.HIGHEST_PROTOCOL)
 
         for phase in self.phase:
             for i, column in enumerate(self.text_feature_columns):
-                sequences = tokenizer.text_to_sequences(
+                sequences = tokenizer[category].text_to_sequences(
                     self.text_feature_maps[phase][column])
                 if i == 0:
                     self.x[phase] = pad_sequences(sequences, maxlen=param.max_length)
