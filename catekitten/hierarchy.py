@@ -84,7 +84,7 @@ def generate_hierarchy():
     return child_hierarchy, parent_hierarchy
 
 
-parent_category = {'bcateid': {1: '악기/취미/만들기',
+child_category = {'bcateid': {1: '악기/취미/만들기',
              2: '완구/교육/교구',
              3: '휴대폰/액세서리',
              4: '침실가구',
@@ -4293,7 +4293,7 @@ parent_category = {'bcateid': {1: '악기/취미/만들기',
              3189: SChildCategory(b=array([14]), m=array([487]), lbl='가발 액세서리'),
              3190: SChildCategory(b=array([51]), m=array([474]), lbl='부추')}}
              
-child_category = {'bcateid': {1: BParentCategory(m=array([  1,  97, 116, 192, 309, 336, 339, 346, 375, 426, 434, 445, 472,
+parent_category = {'bcateid': {1: BParentCategory(m=array([  1,  97, 116, 192, 309, 336, 339, 346, 375, 426, 434, 445, 472,
        480, 498, 499, 533]), s=array([   2,   55,  138,  168,  212,  304,  541,  657,  715,  727,  753,
         868,  900,  942,  950, 1028, 1057, 1089, 1129, 1225, 1247, 1345,
        1466, 1487, 1503, 1511, 1557, 1594, 1725, 1844, 1875, 1964, 1966,
