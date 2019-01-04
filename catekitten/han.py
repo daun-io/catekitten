@@ -88,7 +88,7 @@ class HAN(Model):
             self, max_words, max_sentences, output_size,
             embedding_matrix=None, word_encoding_dim=100,
             sentence_encoding_dim=100, vocabulary_size=20000, embedding_dim=150,
-            inputs=None, outputs=None, name='han-for-docla'
+            dense_layer_subfix='b', inputs=None, outputs=None, name='han'
     ):
         """
         A Keras implementation of Hierarchical Attention networks
@@ -112,7 +112,7 @@ class HAN(Model):
         self.sentence_encoding_dim = sentence_encoding_dim
         self.vocabulary_size = vocabulary_size
         self.embedding_dim = embedding_dim
-
+        self.dense_layer_subfix = dense_layer_subfix
 
         in_tensor, out_tensor = self._build_network()
 
@@ -149,7 +149,8 @@ class HAN(Model):
         else:
             embedding_layer = Embedding(
                 vocabulary_size, embedding_dim, 
-                input_length=max_words, trainable=True
+                input_length=max_words, trainable=True,
+                name="embedding",
             )
 
         sentence_input = Input(shape=(max_words,), dtype='int32')
@@ -217,7 +218,8 @@ class HAN(Model):
         doc_summary = AttentionLayer(name='sentence_attention')(doc_rep)
 
         out_tensor = Dense(
-            self.output_size, activation='softmax', name='class_prediction'
+            self.output_size, activation='softmax',
+            name='class_prediction_%s' % self.dense_layer_subfix
         )(doc_summary)
 
         return in_tensor, out_tensor
