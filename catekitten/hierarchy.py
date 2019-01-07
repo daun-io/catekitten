@@ -1,10 +1,31 @@
-from catekitten.train import load_datasets, load_category_labels
 from pprint import pprint
 from numpy import array, int32
 import numpy as np
 import pickle
 import collections
 import copy
+
+
+DATA_DIR = "./data/prep/textonly.h5"
+LABEL_DIR = "./data/raw/cate1.json"
+
+
+def load_datasets(data_dir=DATA_DIR):
+    """Load data 
+    
+    Args:
+        data_dir (str): directory of converted h5 data
+    
+    Returns:
+        Loader: hdf data
+    """
+
+    train = Loader(data_dir, subset_name='train')
+    return train 
+
+
+def load_category_labels(data_dir=LABEL_DIR):
+    return get_category_map(data_dir)
 
 
 def namedtuple_with_defaults(typename, field_names, default_values=''):
@@ -29,7 +50,7 @@ SParentCategory = namedtuple_with_defaults("SParentCategory", "d lbl")
 
 
 def generate_hierarchy():
-    train, _, _ = load_datasets()
+    train = load_datasets()
     train = train[:,:]
     labels = load_category_labels()
 

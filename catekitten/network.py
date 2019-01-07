@@ -42,6 +42,24 @@ class NbSvmClassifier(BaseEstimator, ClassifierMixin):
         return self
 
 
+class BidirectionalCNN(SequenceEncoderBase):
+    def __init__(self, num_filters=64, dropout_rate=0.5):
+        """Modified version of Yoon Kim's shallow cnn model: https://arxiv.org/pdf/1408.5882.pdf
+        Args:
+            num_filters: The number of filters to use per `filter_size`. (Default value = 64)
+            filter_sizes: The filter sizes for each convolutional layer. (Default value = [3, 4, 5])
+            **cnn_kwargs: Additional args for building the `Conv1D` layer.
+        """
+        super(BidirectionalCNN, self).__init__(dropout_rate)
+        self.num_filters = num_filters
+
+    def build_model(self, x):
+        x = layers.Bidirectional(layers.GRU(self.num_filters, return_sequences=True))(x)
+        x = layers.Conv1D(64, kernel_size=3, padding="valid", kernel_initializer="glorot_uniform")(x)
+        x = layers.GlobalMaxPooling1D()(x)
+        return x
+
+
 class YoonKimCNNv3(SequenceEncoderBase):
     def __init__(self, num_filters=128, filter_sizes=[2, 3, 4, 5], dropout_rate=0.5, **conv_kwargs):
         """Modified version of Yoon Kim's shallow cnn model: https://arxiv.org/pdf/1408.5882.pdf

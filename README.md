@@ -25,6 +25,8 @@ sklearn
 git clone https://github.com/nyanye/catekitten.git
 cd catekitten
 
+# catekitten/data/raw 경로에 모든 Shopping classification 
+# 문제 데이터셋(train, dev, test), cate1.json을 넣어주세요!
 # HDF 전처리
 python -m catekitten.data merge "./data/raw/" "./data/prep/textonly.h5" 
 
@@ -114,7 +116,7 @@ python -m catekitten.train
 Dev 데이터셋 채점 결과:  
 1.058758
 
-#### Triple blend (YoonKimCNN * 3)
+#### YoonKimCNN * 3
 
 ```
 # checkpoint 10
@@ -138,6 +140,11 @@ clf.predict(epoch=[10,15,20])
 
 Dev 데이터셋 채점 결과:  
 1.064415
+
+#### YoonKimCNN * 5
+
+Dev 데이터셋 채점 결과:  
+1.066...
 
 ## Evaluation
 

@@ -2,8 +2,11 @@ from catekitten.about import *
 from catekitten import base
 from catekitten import data
 from catekitten import evaluate
+from catekitten import factory
+from catekitten import han
+from catekitten import hierarchy
+from catekitten import model
 from catekitten import network
-from catekitten import train
+from catekitten import param
 from catekitten import transform
 from catekitten import utils
-from catekitten import param
