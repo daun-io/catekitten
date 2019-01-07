@@ -30,8 +30,9 @@ cd catekitten
 # HDF 전처리
 python -m catekitten.data merge "./data/raw/" "./data/prep/textonly.h5" 
 
-# 학습 및 추론 결과 생성, 메모리를 많이 요구할 수 있습니다.
-python -m catekitten.train
+# 기존 weight를 활용한 추론 결과 생성, 메모리를 많이 요구할 수 있습니다.
+# 실제 활용 모델 용량: 0.98GB
+python -m catekitten.model --phase='blending_predict' --predict_target='dev'
 ```
 
 ### pre-trained model
