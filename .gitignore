@@ -16,7 +16,6 @@ build
 *.08
 *.09
 
-models
 results
 *.tsv
 *.zip
