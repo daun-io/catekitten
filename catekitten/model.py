@@ -265,7 +265,7 @@ class TextFeatureClassifier(object):
         return model
     
     def build_allinone_model(self, visualize=False):
-        model = YoonKimCNNv2(dropout_rate=param.dropout_rate)
+        model = NETWORKS['YoonKimCNNv2'](dropout_rate=param.dropout_rate)
         sequence_input = layers.Input(shape=(param.max_length*4), dtype='int32')
         x_embed = layers.Embedding(
             param.vocab_size, param.embedding_size,
