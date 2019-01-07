@@ -31,8 +31,12 @@ cd catekitten
 python -m catekitten.data merge "./data/raw/" "./data/prep/textonly.h5" 
 
 # 기존 weight를 활용한 추론 결과 생성, 메모리를 많이 요구할 수 있습니다.
-# 실제 활용 모델 용량: 0.98GB
+# 활용 모델 용량: 0.98GB
+# 공개 리더보드 점수: 1.066142 
 python -m catekitten.model --phase='blending_predict' --predict_target='dev'
+
+# 공개 리더보드 점수 1.066142 해당 모델 학습 코드
+python -m catekitten.model --phase='blending_train'
 ```
 
 ### pre-trained model
@@ -145,7 +149,7 @@ Dev 데이터셋 채점 결과:
 #### YoonKimCNN * 5
 
 Dev 데이터셋 채점 결과:  
-1.066...
+1.066142 
 
 ## Evaluation
 
