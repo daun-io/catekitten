@@ -266,7 +266,7 @@ class TextFeatureClassifier(object):
     
     def build_allinone_model(self, visualize=False):
         model = NETWORKS['YoonKimCNNv2'](dropout_rate=param.dropout_rate)
-        sequence_input = layers.Input(shape=(param.max_length*4), dtype='int32')
+        sequence_input = layers.Input(shape=(param.max_length*4,), dtype='int32')
         x_embed = layers.Embedding(
             param.vocab_size, param.embedding_size,
             input_length=param.max_length*4, name="embedding")(sequence_input)
