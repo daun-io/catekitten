@@ -500,7 +500,7 @@ class TextFeatureClassifier(object):
                     y_pred_ = np.array([])
                     print("predicting mcategory")
                     # bcategory의 prediction 결과에 해당하는 raw_prediction
-                    # index에 * 1.1의 weight를 곱함
+                    # index * weight
                     for batch, b_batch in zip(gen_batch(self.x[target], batch_chunk_size),
                                               gen_batch(bcate_result, batch_chunk_size)):
                         b_weight_index = []
@@ -533,7 +533,7 @@ class TextFeatureClassifier(object):
                     y_pred_ = np.array([])
                     print("predicting scategory")
                     # mcategory, bcategory의 prediction 결과에 해당하는 raw_prediction
-                    # index에 * 1.1의 weight를 곱함
+                    # index * weight
                     for batch, b_batch, m_batch in zip(gen_batch(self.x[target], batch_chunk_size),
                                                        gen_batch(bcate_result, batch_chunk_size),
                                                        gen_batch(mcate_result, batch_chunk_size)):                    
@@ -575,7 +575,7 @@ class TextFeatureClassifier(object):
                     y_pred_ = np.array([])
                     print("predicting dcategory")
                     # scategory, mcategory, bcategory의 prediction 결과에 해당하는 raw_prediction
-                    # index에 * 1.1의 weight를 곱함
+                    # index * weight
                     for batch, b_batch, m_batch, s_batch in zip(gen_batch(self.x[target], batch_chunk_size),
                                                                 gen_batch(bcate_result, batch_chunk_size),
                                                                 gen_batch(mcate_result, batch_chunk_size),
