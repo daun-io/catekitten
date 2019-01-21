@@ -184,8 +184,7 @@ class TextFeatureClassifier(object):
                     tokenizer[category] = Tokenizer(num_words=param.vocab_size)
                     tokenizer[category].fit_on_texts(pd.concat(
                         [self.text_feature_maps['train'][category],
-                        self.text_feature_maps['dev'][category],
-                        self.text_feature_maps['test'][category]]))
+                        self.text_feature_maps['dev'][category]]))
 
                     # saving tokenizer
                     with open(tokenizer_pickle % category, 'wb+') as handle:
